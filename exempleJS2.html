@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mi primer JavaScript</title>
+</head>
+<body>
+  <h1>Hola mundo</h1>
+  <button onclick="saludar()">Fes click aquí</button>
+  <button onclick="insultar()">Tintin</button>
+
+  <script>
+    function saludar() {
+      alert("¡Hola! aquest és el primer exemple JS.");
+      console.log("Has fet click");
+    }
+
+       // Array d'insults del capità Haddock
+       const insults = [
+      "Tros de quòniam!",
+      "Bachi-buzuk!",
+      "Ectoplasma!",
+      "Zoologic ambulant!",
+      "Cercòpat!",
+      "Cercopitec mal embastat!",
+      "Paparra sideral!",
+      "Troglodita!",
+      "Filibuster del desert!",
+      "Botifler!"
+    ];
+
+    function insultar() {
+      const index = Math.floor(Math.random() * insults.length);
+      const insult = insults[index];
+      alert(insult);
+      console.log("Has fet click");
+    }
+
+</script>
+</body>
+</html>
