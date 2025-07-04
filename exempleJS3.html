@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tintin i el Capità Haddock</title>
+</head>
+<body>
+  <h1>Hola!</h1>
+  <table>
+    <tr><td><IMG onclick="saludar()" height="200px" src="https://upload.wikimedia.org/wikipedia/commons/7/72/Stockel-TinTin-1_%28cropped%29.jpg">
+    </td><td><IMG onclick="insultar()" height="200px" src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Comic_mural_of_Captain_Haddock_%28cropped%29.jpg"></td>
+    </tr> 
+
+    <tr>
+      <td><button onclick="saludar()">Salutacions de Tintin</button></td>
+      <td><button onclick="insultar()">Insults del Capità Haddock</button></td>
+    </tr>
+    
+    
+  </table>
+  <div id="consola"></div>
+  
+
+
+</body>
+<script>
+
+  // Array d'insults del capità Haddock
+  const insults = [
+     "Tros de quòniam!",
+     "Bachi-buzuk!",
+     "Ectoplasma!",
+     "Zoologic ambulant!",
+     "Cercòpat!",
+     "Cercopitec mal embastat!",
+     "Paparra sideral!",
+     "Troglodita!",
+     "Filibuster del desert!",
+     "Botifler!"
+   ];
+
+   const salutacions = [
+       "Hola, sóc en Tintín!",
+       "Bon dia, company!",
+       "Bones! Quines novetats?",
+       "Salutacions des de Syldàvia!",
+       "Ep! Preparat per l'aventura?",
+       "Hola, professor Tornassol!",
+       "Capità Haddock! Bon dia!",
+       "Què tal, Milú?",
+       "Ei! Ens posem en marxa?",
+       "Hola, amic! Vine amb mi!"
+ ];
+
+function saludar() {
+ const index = Math.floor(Math.random() * insults.length);
+ const message = salutacions[index];
+ alert(message);
+ console.log("Has fet click");
+ const div = document.getElementById('consola');
+ div.innerHTML+="<b>Tintin:</b> "+message+"<BR>";
+}
+
+
+function insultar() {
+ const index = Math.floor(Math.random() * insults.length);
+ const insult = insults[index];
+ alert(insult);
+ console.log("Has fet click");
+ const div = document.getElementById('consola');
+ div.innerHTML+="<b>Capità Haddock:</b> "+insult+"<BR>";
+
+}
+
+</script>
+
+</html>
