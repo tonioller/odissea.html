@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joc de Memòria - L'Odissea</title>
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background: linear-gradient(#87CEEB, #F4E4BC);
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1{
+        color: #1f4e79;
+    }
+
+    #info{
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    #timer{
+        font-size: 22px;
+        font-weight: bold;
+        color: #b30000;
+    }
+
+    #remaining{
+        font-size: 20px;
+        font-weight: bold;
+        color: #1f4e79;
+        margin-top: 5px;
+    }
+
+    #game{
+        display: grid;
+        grid-template-columns: repeat(4, 120px);
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .card{
+        width: 120px;
+        height: 120px;
+        background-color: #1f4e79;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .card.flipped{
+        background-color: #f8f8f8;
+        color: #222;
+        border: 2px solid #1f4e79;
+    }
+
+    .card.matched{
+        background-color: #8BC34A;
+        cursor: default;
+    }
+
+    button{
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #message{
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>⚓ Joc de Memòria de L'Odissea ⚓</h1>
+
+<div id="info">
+    ⏳ Temps restant: <span id="timer"></span>s<br>
+    🧩 Parelles restants: <span id="remaining"></span>
+</div>
+
+<div id="game"></div>
+
+<button onclick="startGame()">Nova partida</button>
+
+<div id="message"></div>
+
+<script>
+/* =========================
+   CONSTANTS PRINCIPALS
+========================= */
+const TIME_LIMIT = 30;
+
+const characters = [
+    "Ulisses",
+    "Penèlope",
+    "Telèmac",
+    "Polifem"
+];
+
+/* ========================= */
+
+let cards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+
+let timeLeft = TIME_LIMIT;
+let timerInterval;
+let gameOver = false;
+
+function shuffle(array){
+    for(let i = array.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function updateUI(){
+    document.getElementById("timer").textContent = timeLeft;
+    document.getElementById("remaining").textContent =
+        characters.length - matchedPairs;
+}
+
+function startGame(){
+    clearInterval(timerInterval);
+
+    timeLeft = TIME_LIMIT;
+    gameOver = false;
+    matchedPairs = 0;
+    flippedCards = [];
+
+    document.getElementById("message").textContent = "";
+
+    const game = document.getElementById("game");
+    game.innerHTML = "";
+
+    cards = [...characters, ...characters];
+    shuffle(cards);
+
+    cards.forEach(character => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.character = character;
+        card.textContent = "?";
+        card.addEventListener("click", flipCard);
+        game.appendChild(card);
+    });
+
+    updateUI();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateUI();
+
+        if(timeLeft <= 0){
+            clearInterval(timerInterval);
+            gameOver = true;
+
+            document.getElementById("message").textContent =
+                "⌛ Temps esgotat! Has perdut.";
+
+            document.querySelectorAll(".card").forEach(card => {
+                card.style.pointerEvents = "none";
+            });
+        }
+    }, 1000);
+}
+
+function flipCard(){
+
+    if(gameOver) return;
+
+    if(
+        this.classList.contains("flipped") ||
+        this.classList.contains("matched") ||
+        flippedCards.length === 2
+    ){
+        return;
+    }
+
+    this.classList.add("flipped");
+    this.textContent = this.dataset.character;
+
+    flippedCards.push(this);
+
+    if(flippedCards.length === 2){
+        checkMatch();
+    }
+}
+
+function checkMatch(){
+    const [card1, card2] = flippedCards;
+
+    if(card1.dataset.character === card2.dataset.character){
+        card1.classList.add("matched");
+        card2.classList.add("matched");
+
+        matchedPairs++;
+
+        updateUI();
+
+        if(matchedPairs === characters.length){
+            clearInterval(timerInterval);
+
+            document.getElementById("message").textContent =
+                "🏆 Has guanyat amb " + timeLeft + " segons restants!";
+        }
+
+        flippedCards = [];
+    } else {
+        setTimeout(() => {
+            card1.classList.remove("flipped");
+            card2.classList.remove("flipped");
+
+            card1.textContent = "?";
+            card2.textContent = "?";
+
+            flippedCards = [];
+        }, 800);
+    }
+}
+
+startGame();
+</script>
+
+</body>
+</html>
